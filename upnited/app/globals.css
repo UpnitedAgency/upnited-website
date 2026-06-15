@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #0a0e17;
+  --surface: #f7f8fa;
+  --surface-2: #ffffff;
+  --border-color: #e6e8eb;
+  --muted: #6b7280;
+
+  --brand-primary: #4f46e5;
+  --brand-secondary: #06b6d4;
+  --brand-accent: #f97316;
+  --brand-gradient-start: #4338ca;
+  --brand-gradient-end: #0891b2;
+}
+
+.dark {
+  --background: #06080f;
+  --foreground: #f5f6f8;
+  --surface: #0c1120;
+  --surface-2: #11162a;
+  --border-color: #1f2840;
+  --muted: #9aa3b8;
+
+  --brand-primary: #6366f1;
+  --brand-secondary: #22d3ee;
+  --brand-accent: #fb923c;
+  --brand-gradient-start: #4f46e5;
+  --brand-gradient-end: #0ea5e9;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border-color: var(--border-color);
+  --color-muted: var(--muted);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-accent: var(--brand-accent);
+  --font-sans: "Helvetica Neue", Arial, "Segoe UI", system-ui, sans-serif;
+  --font-display: "Helvetica Neue", Arial, "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  border-color: var(--border-color);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--brand-primary);
+  border-radius: 999px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--brand-gradient-start), var(--brand-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, var(--brand-gradient-start), var(--brand-gradient-end));
+}
+
+.glass {
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.card-hover {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.card-hover:hover {
+  transform: translateY(-6px);
+  border-color: var(--brand-primary);
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.7; }
+}
+.animate-glow {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+.section-padding {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+}
