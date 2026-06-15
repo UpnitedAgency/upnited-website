@@ -4,32 +4,32 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0a0e17;
-  --surface: #f7f8fa;
+  --foreground: #1a1a1a;
+  --surface: #f5f5f5;
   --surface-2: #ffffff;
   --border-color: #e6e8eb;
-  --muted: #6b7280;
+  --muted: #898a8d;
 
-  --brand-primary: #4f46e5;
-  --brand-secondary: #06b6d4;
-  --brand-accent: #f97316;
-  --brand-gradient-start: #4338ca;
-  --brand-gradient-end: #0891b2;
+  --brand-primary: #0b4650;
+  --brand-secondary: #f97f52;
+  --brand-accent: #e6ff2b;
+  --brand-gradient-start: #0b4650;
+  --brand-gradient-end: #157a8c;
 }
 
 .dark {
-  --background: #06080f;
-  --foreground: #f5f6f8;
-  --surface: #0c1120;
-  --surface-2: #11162a;
-  --border-color: #1f2840;
-  --muted: #9aa3b8;
+  --background: #0d0d0d;
+  --foreground: #f5f5f5;
+  --surface: #161616;
+  --surface-2: #1c1c1c;
+  --border-color: #2a2a2a;
+  --muted: #a3a4a7;
 
-  --brand-primary: #6366f1;
-  --brand-secondary: #22d3ee;
-  --brand-accent: #fb923c;
-  --brand-gradient-start: #4f46e5;
-  --brand-gradient-end: #0ea5e9;
+  --brand-primary: #14828f;
+  --brand-secondary: #f97f52;
+  --brand-accent: #e6ff2b;
+  --brand-gradient-start: #0b4650;
+  --brand-gradient-end: #14828f;
 }
 
 @theme inline {
@@ -42,8 +42,8 @@
   --color-brand-primary: var(--brand-primary);
   --color-brand-secondary: var(--brand-secondary);
   --color-brand-accent: var(--brand-accent);
-  --font-sans: "Helvetica Neue", Arial, "Segoe UI", system-ui, sans-serif;
-  --font-display: "Helvetica Neue", Arial, "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Garet", "Poppins", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-display: "League Spartan", "Poppins", "Helvetica Neue", Arial, system-ui, sans-serif;
 }
 
 * {
@@ -73,7 +73,7 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--brand-gradient-start), var(--brand-secondary));
+  background: linear-gradient(135deg, var(--brand-gradient-start), var(--brand-gradient-end));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -81,6 +81,15 @@ body {
 
 .gradient-bg {
   background: linear-gradient(135deg, var(--brand-gradient-start), var(--brand-gradient-end));
+}
+
+.accent-text {
+  color: var(--brand-accent);
+}
+
+.accent-bg {
+  background: var(--brand-accent);
+  color: var(--brand-primary);
 }
 
 .glass {
