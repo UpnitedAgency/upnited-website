@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/shared/ThemeProvider";
 import { ThemeScript } from "@/components/shared/ThemeScript";
@@ -14,11 +15,13 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: [
-    "digital marketing agency Sri Lanka",
-    "social media management Sri Lanka",
-    "branding agency Colombo",
-    "talent hub Sri Lanka",
-    "video production Sri Lanka",
+    "Digital Marketing Sri Lanka",
+    "Social Media Marketing",
+    "Branding Agency",
+    "Creative Agency",
+    "Graphic Design",
+    "Website Development",
+    "Digital Advertising",
   ],
   openGraph: {
     title: siteConfig.name,
@@ -52,6 +55,22 @@ export default function RootLayout({
           <Footer />
           <WhatsAppButton />
         </ThemeProvider>
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
