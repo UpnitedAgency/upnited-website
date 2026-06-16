@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/shared/ThemeProvider";
 import { ThemeScript } from "@/components/shared/ThemeScript";
@@ -14,11 +15,13 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: [
-    "digital marketing agency Sri Lanka",
-    "social media management Sri Lanka",
-    "branding agency Colombo",
-    "talent hub Sri Lanka",
-    "video production Sri Lanka",
+    "Digital Marketing Sri Lanka",
+    "Social Media Marketing",
+    "Branding Agency",
+    "Creative Agency",
+    "Graphic Design",
+    "Website Development",
+    "Digital Advertising",
   ],
   openGraph: {
     title: siteConfig.name,
@@ -52,6 +55,9 @@ export default function RootLayout({
           <Footer />
           <WhatsAppButton />
         </ThemeProvider>
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
       </body>
     </html>
   );
