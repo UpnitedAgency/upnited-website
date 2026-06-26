@@ -102,15 +102,15 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-2 text-sm text-muted">
                 <Mail size={16} className="mt-0.5 shrink-0 text-brand-primary" />
-                <a href={mailto:${siteConfig.email}} className="hover:text-brand-primary">{siteConfig.email}</a>
+                <a href={`mailto:${siteConfig.email}`} className="hover:text-brand-primary">{siteConfig.email}</a>
               </li>
               <li className="flex items-start gap-2 text-sm text-muted">
                 <Phone size={16} className="mt-0.5 shrink-0 text-brand-primary" />
-                <a href={tel:${siteConfig.phone}} className="hover:text-brand-primary">{siteConfig.phone}</a>
+                <a href={`tel:${siteConfig.phone}`} className="hover:text-brand-primary">{siteConfig.phone}</a>
               </li>
               <li>
                 <a
-                  href={https://wa.me/${siteConfig.whatsappNumber}}
+                  href={`https://wa.me/${siteConfig.whatsappNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-1 inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-105"
@@ -125,7 +125,6 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border-color pt-6 text-sm text-muted sm:flex-row">
           <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
-          {/* මෙතනට ඔයාගේ නම සහ Company එක ලස්සනට ඇතුළත් කරා */}
           <p>Made with care by <span className="font-semibold text-foreground/90">Pasindu Tharaka</span> @ <span className="font-semibold text-brand-primary">UpNited Marketing</span> 🇱🇰</p>
         </div>
       </div>
