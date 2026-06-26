@@ -8,18 +8,18 @@ export default function WorkspacePage() {
   const [user, setUser] = useState<any>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false); // Sign In සහ Sign Up මාරු කරන්න
   const [authMessage, setAuthMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   
-  // Tasks Management States
+  // Tasks Management
   const [tasks, setTasks] = useState<any[]>([]);
   const [newTask, setNewTask] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Current Session Check
+    // Current Session එක චෙක් කිරීම
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user && session.user.email_confirmed_at) {
+      if (session?.user) {
         setUser(session.user);
         fetchTasks(session.user.id);
       } else {
@@ -30,7 +30,7 @@ export default function WorkspacePage() {
 
     // Auth Change Listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user && session.user.email_confirmed_at) {
+      if (session?.user) {
         setUser(session.user);
         fetchTasks(session.user.id);
       } else {
@@ -42,7 +42,6 @@ export default function WorkspacePage() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Database එකෙන් Tasks ඇදීම
   const fetchTasks = async (userId: string) => {
     const { data } = await supabase
       .from("tasks")
@@ -52,40 +51,38 @@ export default function WorkspacePage() {
     if (data) setTasks(data);
   };
 
-  // Auth Submit Handler
+  // Auth Submit Actions (Login / Register)
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthMessage(null);
 
+    if (!email.trim() || !password.trim()) {
+      setAuthMessage({ type: "error", text: "Please fill in all fields." });
+      return;
+    }
+
     if (isSignUp) {
+      // 1. අලුත් Employee කෙනෙක් Register කිරීම (Sign Up)
       const { data, error } = await supabase.auth.signUp({ email, password });
       
       if (error) {
         setAuthMessage({ type: "error", text: error.message });
-      } else if (data?.user && !data.user.email_confirmed_at) {
+      } else if (data?.user) {
         setAuthMessage({ 
           type: "success", 
-          text: "Registration successful! We've sent a verification link to your email. Please check your inbox and click the link to activate your account before signing in." 
+          text: "Registration successful! If required, please confirm via email link, or use the form below to Sign In now." 
         });
-        setEmail("");
-        setPassword("");
-        setIsSignUp(false);
+        setIsSignUp(false); // එකවුන්ට් එක හැදුනට පස්සේ Sign In පේජ් එකට හරවනවා
       }
     } else {
+      // 2. දැනට ඉන්න Employee කෙනෙක් ලොග් වීම (Sign In)
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       
       if (error) {
         setAuthMessage({ type: "error", text: error.message });
-        return;
-      }
-
-      if (data?.user && !data.user.email_confirmed_at) {
-        setAuthMessage({ 
-          type: "error", 
-          text: "Your account is not verified yet. Please check your inbox and confirm your email first." 
-        });
-        await supabase.auth.signOut();
-        setUser(null);
+      } else if (data?.user) {
+        setUser(data.user);
+        fetchTasks(data.user.id);
       }
     }
   };
@@ -128,21 +125,25 @@ export default function WorkspacePage() {
     <section className="bg-[#f4f7f4] min-h-screen py-24 px-4 text-slate-900 flex justify-center items-center">
       <div className="max-w-md w-full bg-white rounded-[2.5rem] border border-slate-200/80 p-8 sm:p-10 shadow-xl relative overflow-hidden">
         
-        {/* Top Header line */}
-        <div className="absolute top-0 left-0 h-[5px] w-full bg-gradient-to-r from-[#a3cc00] to-black" />
+        {/* Top Gradient Line */}
+        <div className="absolute top-0 left-0 h-[5px] w-full bg-[#1e4e5e]" />
 
         {!user ? (
           <div>
+            {/* Logo and Header */}
             <div className="text-center mb-8">
-              <div className="w-14 h-14 bg-slate-900 text-white font-black text-2xl flex items-center justify-center rounded-2xl mx-auto shadow-md">
+              <div className="w-14 h-14 bg-[#1e4e5e] text-white font-black text-2xl flex items-center justify-center rounded-2xl mx-auto shadow-md">
                 U
               </div>
-              <h2 className="text-2xl font-extrabold text-slate-950 mt-4 tracking-tight">
-                {isSignUp ? "Create Workspace Account" : "UpNited Workspace"}
+              <h2 className="text-2xl font-extrabold text-[#1e4e5e] mt-4 tracking-tight">
+                {isSignUp ? "Register Employee Profile" : "UpNited Workspace"}
               </h2>
-              <p className="text-xs text-slate-500 mt-1">Verified employee access portal only</p>
+              <p className="text-xs text-slate-500 mt-1">
+                {isSignUp ? "Create your official credential details" : "Sign in with your employee credentials"}
+              </p>
             </div>
 
+            {/* Error / Success Notifications */}
             {authMessage && (
               <div className={`p-4 rounded-xl mb-6 text-xs font-semibold flex items-start gap-2.5 leading-relaxed ${
                 authMessage.type === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : "bg-red-50 text-red-600 border border-red-100"
@@ -152,15 +153,16 @@ export default function WorkspacePage() {
               </div>
             )}
 
+            {/* Main Form */}
             <form onSubmit={handleAuth} className="flex flex-col gap-4">
               <div>
-                <label className="text-xs font-bold text-slate-600 block mb-1">Company Email</label>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Work Email</label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input
                     type="email"
                     placeholder="employee@upnited.com"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#a3cc00]"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#1e4e5e]"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -175,7 +177,7 @@ export default function WorkspacePage() {
                   <input
                     type="password"
                     placeholder="••••••••"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#a3cc00]"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#1e4e5e]"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -188,37 +190,39 @@ export default function WorkspacePage() {
                 className="w-full bg-[#1e4e5e] hover:bg-[#153743] text-white rounded-xl py-3.5 text-sm font-bold flex items-center justify-center gap-2 mt-2 transition-all active:scale-95 shadow-md"
               >
                 {isSignUp ? <UserPlus size={16} /> : <Key size={16} />}
-                {isSignUp ? "Register Account" : "Secure Sign In"}
+                {isSignUp ? "Create Profile & Register" : "Sign In"}
               </button>
             </form>
 
+            {/* Toggle Button Between Sign In & Sign Up */}
             <div className="text-center mt-6 border-t border-slate-100 pt-4">
               <button
                 onClick={() => { setIsSignUp(!isSignUp); setAuthMessage(null); }}
-                className="text-xs font-bold text-[#a3cc00] hover:underline"
+                className="text-xs font-bold text-[#1e4e5e] hover:underline"
               >
-                {isSignUp ? "Already a team member? Sign In" : "New Employee? Register Here"}
+                {isSignUp ? "Already have an account? Sign In" : "New Employee? Register Profile here"}
               </button>
             </div>
           </div>
         ) : (
-          /* Dashboard Layout */
+          /* Logged In Dashboard Layout */
           <div>
             <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
               <div>
-                <span className="text-[10px] font-bold text-slate-400 block uppercase">Workspace Connected</span>
+                <span className="text-[10px] font-bold text-slate-400 block uppercase">Workspace Active</span>
                 <p className="text-sm font-bold text-slate-900 truncate max-w-[200px]">{user.email}</p>
               </div>
               <button
                 onClick={() => supabase.auth.signOut()}
                 className="p-2.5 bg-slate-50 border border-slate-200 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all"
+                title="Sign Out"
               >
                 <LogOut size={16} />
               </button>
             </div>
 
             <h3 className="text-lg font-extrabold text-slate-950 flex items-center gap-2 mb-4">
-              <ShieldCheck className="text-[#a3cc00]" size={20} />
+              <ShieldCheck className="text-emerald-600" size={20} />
               Daily Operational Tasks
             </h3>
 
@@ -226,7 +230,7 @@ export default function WorkspacePage() {
               <input
                 type="text"
                 placeholder="Assign or write a daily task..."
-                className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#a3cc00]"
+                className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
               />
@@ -247,11 +251,11 @@ export default function WorkspacePage() {
                     key={task.id}
                     onClick={() => toggleTask(task.id, task.completed)}
                     className={`flex items-center gap-3 p-3.5 rounded-xl border border-slate-100 cursor-pointer transition-all ${
-                      task.completed ? "bg-slate-50 opacity-60 line-through text-slate-400" : "bg-white hover:border-[#a3cc00]/50"
+                      task.completed ? "bg-slate-50 opacity-60 line-through text-slate-400" : "bg-white hover:border-[#1e4e5e]/50"
                     }`}
                   >
                     {task.completed ? (
-                      <CheckCircle2 size={18} className="text-[#a3cc00] shrink-0" />
+                      <CheckCircle2 size={18} className="text-emerald-600 shrink-0" />
                     ) : (
                       <Circle size={18} className="text-slate-300 shrink-0" />
                     )}
