@@ -2,11 +2,10 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2, MessageSquarePlus } from "lucide-react";
 
 const servicesData = [
   {
-    id: "01",
     title: "Social Media Management",
     desc: "We plan, create, and manage your social media presence to drive engagement and brand loyalty.",
     image: "/services/social-3d.png", 
@@ -18,7 +17,6 @@ const servicesData = [
     ],
   },
   {
-    id: "02",
     title: "Branding and Graphic Design",
     desc: "Crafting memorable brand identities, logos, and visual assets that set your business apart from the competition.",
     image: "/services/branding-3d.png",
@@ -30,7 +28,6 @@ const servicesData = [
     ],
   },
   {
-    id: "03",
     title: "Website Design and Development",
     desc: "Fast, responsive, and conversion-focused websites tailored specifically for your business goals.",
     image: "/services/web-3d.png",
@@ -42,7 +39,6 @@ const servicesData = [
     ],
   },
   {
-    id: "04",
     title: "Meta and Google Ads",
     desc: "High-performing paid ad campaigns that target the right audience to deliver maximum return on investment (ROI).",
     image: "/services/ads-3d.png",
@@ -54,7 +50,6 @@ const servicesData = [
     ],
   },
   {
-    id: "05",
     title: "Video Production",
     desc: "High-quality, scroll-stopping video content designed for modern social media platforms and branding.",
     image: "/services/video-3d.png",
@@ -66,7 +61,6 @@ const servicesData = [
     ],
   },
   {
-    id: "06",
     title: "Drone Photography and Videography",
     desc: "Stunning, cinematic aerial views and footage to elevate your commercial projects and brand storytelling.",
     image: "/services/drone-3d.png",
@@ -102,7 +96,7 @@ export default function ServicesPage() {
         <div className="flex flex-col gap-12 w-full">
           {servicesData.map((service, index) => (
             <motion.div
-              key={service.id}
+              key={service.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -114,20 +108,21 @@ export default function ServicesPage() {
               <div className="absolute top-0 left-0 h-[4px] w-16 bg-[#ccff00]" />
 
               {/* Left Side: 3D Image Line Box */}
-              <div className="lg:col-span-4 flex justify-center items-center bg-slate-50 rounded-3xl p-6 aspect-square max-w-[260px] w-full mx-auto lg:mx-0 shadow-inner group">
+              <div className="lg:col-span-4 flex justify-center items-center bg-slate-50 border border-slate-100 rounded-3xl p-6 aspect-square max-w-[260px] w-full mx-auto lg:mx-0 shadow-inner group">
                 <img
                   src={service.image}
                   alt={service.title}
-                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-md"
+                  onError={(e) => {
+                    // පින්තූරය public එකේ නැත්නම් broken image icon එකක් වෙනුවට transparent Placeholder එකක් පෙන්නනවා
+                    e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23a3cc00' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'><rect width='18' height='18' x='3' y='3' rx='2' ry='2'/><circle cx='9' cy='9' r='2'/><path d='m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21'/></svg>";
+                  }}
+                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
 
               {/* Right Side: Content Box */}
               <div className="lg:col-span-8 flex flex-col justify-between h-full">
                 <div>
-                  <span className="text-xs font-bold text-[#a3cc00] tracking-wider uppercase">
-                    Service {service.id}
-                  </span>
                   <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-950 mt-1">
                     {service.title}
                   </h3>
@@ -153,10 +148,10 @@ export default function ServicesPage() {
                 <div className="mt-8 pt-6 border-t border-slate-100 flex justify-end">
                   <Link
                     href="/contact"
-                    className="group inline-flex items-center gap-2 rounded-full bg-black hover:bg-slate-900 text-white px-6 py-3 text-xs font-bold transition-all shadow-md active:scale-95"
+                    className="group inline-flex items-center gap-2 rounded-full bg-black hover:bg-slate-900 text-white px-6 py-3.5 text-xs font-bold transition-all shadow-md active:scale-95"
                   >
-                    Start a Conversation
-                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                    <MessageSquarePlus size={15} className="text-[#ccff00]" />
+                    <span>Start a Conversation</span>
                   </Link>
                 </div>
               </div>
