@@ -5,14 +5,14 @@ export const siteConfig = {
   description:
     "UpNited is a creative growth partner helping brands scale through strategy, branding, social media marketing, content creation, and digital advertising.",
   url: "https://upnited.com",
-  whatsappNumber: "94721831353",
+  whatsappNumber: "94779251883",
   email: "upnited.marketing@gmail.com",
   phone: "+94 72 183 1353",
   location: "Colombo, Sri Lanka",
   social: {
     facebook: "https://facebook.com/upnited",
     instagram: "https://instagram.com/upnited",
-    linkedin: "https://linkedin.com/company/upnited",
+    linkedin: "https://www.linkedin.com/in/pasindu-tharaka-mkt/",
     youtube: "https://youtube.com/@upnited",
     tiktok: "https://tiktok.com/@upnited",
   },
