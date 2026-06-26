@@ -7,8 +7,8 @@ export const siteConfig = {
   url: "https://upnited.com",
   whatsappNumber: "94779251883",
   email: "upnited.marketing@gmail.com",
-  phone: "+94 72 183 1353",
-  location: "Colombo, Sri Lanka",
+  phone: "94728008448",
+  location: "Battharamulla, Sri Lanka",
   social: {
     facebook: "https://facebook.com/upnited",
     instagram: "https://instagram.com/upnited",
