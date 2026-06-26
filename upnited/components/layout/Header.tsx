@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image"; // Next.js Image component එක import කරා
 import { useState, useEffect } from "react";
 import { Menu, X, Sun, Moon, ArrowUpRight } from "lucide-react";
 import { useTheme } from "@/components/shared/ThemeProvider";
@@ -26,9 +27,16 @@ export function Header() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 group" onClick={() => setOpen(false)}>
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl gradient-bg font-display text-lg font-bold text-white shadow-lg shadow-brand-primary/30 transition-transform group-hover:scale-105">
-            U
-          </span>
+          {/* මෙතනට ඔයාගේ logo.jpg එක ඇතුළත් කරා */}
+          <div className="relative h-9 w-9 overflow-hidden rounded-xl transition-transform group-hover:scale-105">
+            <Image
+              src="/logo.jpg"
+              alt="UpNited Logo"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
           <span className="font-display text-lg font-bold tracking-tight">
             {siteConfig.shortName}
           </span>
