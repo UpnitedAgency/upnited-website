@@ -13,7 +13,7 @@ export function BookingSection() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Form එකේ අනිත් දත්ත track කරන්න state එකක් හැදුවා
+  // Form එකේ දත්ත හරියටම track වෙන්න හැදුවා
   const [bookingData, setBookingData] = useState({
     name: "",
     email: "",
@@ -38,7 +38,7 @@ export function BookingSection() {
     setLoading(true);
     setErrorMessage(null);
 
-    // Web3Forms එකට යවන දත්ත structure එක
+    // ඔයාගේ පරණ Key එකමයි පාවිච්චි කරලා තියෙන්නේ
     const sendData = {
       access_key: "c8105b3b-3479-4a0d-9ca4-3e0b692d00b6",
       subject: "New Consultation Booking Request",
@@ -63,7 +63,6 @@ export function BookingSection() {
 
       if (data.success) {
         setSubmitted(true);
-        // Form එක reset කරනවා
         setBookingData({ name: "", email: "", date: "", meetingType: "Discovery Call" });
       } else {
         console.error("Web3Forms Error:", data);
