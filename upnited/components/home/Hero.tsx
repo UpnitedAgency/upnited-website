@@ -1,14 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Search, ArrowUpRight, Sparkles, ArrowRight, Users, Briefcase } from "lucide-react";
+import Image from "next/image"; // Next.js Image Component එක import කරා
+import { ArrowRight, Sparkles, Users } from "lucide-react";
 
 export function Hero() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedService, setSelectedService] = useState("Digital Marketing");
-
   return (
     <section className="relative min-h-screen bg-[#f4f7f4] pt-28 pb-16 text-slate-900 px-4 sm:px-6 lg:px-8 overflow-hidden flex flex-col justify-between">
       
@@ -17,8 +14,8 @@ export function Hero() {
 
       <div className="mx-auto max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center my-auto">
         
-        {/* LEFT SIDE: Content & Interactive Search Bar */}
-        <div className="lg:col-span-7 text-center lg:text-left z-10">
+        {/* LEFT SIDE: Content & New Dual Buttons */}
+        <div className="lg:col-span-6 text-center lg:text-left z-10">
           
           {/* Badge */}
           <motion.div 
@@ -55,46 +52,31 @@ export function Hero() {
             Lanka&apos;s most talented people get discovered.
           </motion.p>
 
-          {/* Interactive Search Bar (Quiety Style) */}
+          {/* Dual Buttons */}
           <motion.div 
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-10 max-w-2xl mx-auto lg:mx-0 p-2 rounded-2xl sm:rounded-full bg-white border border-slate-200 shadow-xl shadow-slate-200/50 flex flex-col sm:flex-row items-center gap-2"
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
           >
-            <div className="flex items-center gap-2 w-full px-3 py-2 sm:py-0">
-              <Search className="text-slate-400 shrink-0" size={18} />
-              <input 
-                type="text" 
-                placeholder="What are you looking to build?..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent text-sm outline-none text-slate-800"
-              />
-            </div>
-            
-            <div className="flex items-center gap-2 w-full sm:w-auto shrink-0 border-t sm:border-t-0 sm:border-l border-slate-100 pt-2 sm:pt-0 sm:pl-2">
-              <select 
-                value={selectedService}
-                onChange={(e) => setSelectedService(e.target.value)}
-                className="w-full sm:w-44 bg-transparent text-sm font-semibold outline-none text-slate-700 py-2 sm:py-0 px-2"
-              >
-                <option value="Digital Marketing">Digital Marketing</option>
-                <option value="Workspace">Workspace Portal</option>
-                <option value="Talent Hub">Explore Talent Hub</option>
-              </select>
+            <Link
+              href="/contact"
+              className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-black hover:bg-slate-900 px-8 py-4 text-sm font-bold text-white transition-all shadow-lg shadow-black/10 active:scale-95"
+            >
+              Learn More
+              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            </Link>
 
-              <Link 
-                href={selectedService === "Talent Hub" ? "/talent-hub" : "/contact"}
-                className="w-full sm:w-auto bg-black hover:bg-slate-900 text-white p-3 rounded-xl sm:rounded-full transition-all flex items-center justify-center gap-1 font-semibold text-sm shrink-0 shadow-md"
-              >
-                Get Started
-                <ArrowUpRight size={16} className="text-[#ccff00]" />
-              </Link>
-            </div>
+            <Link
+              href="/talent-hub"
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border-2 border-[#a3cc00] bg-white hover:bg-[#f4f7f4] px-8 py-4 text-sm font-bold text-slate-900 transition-all active:scale-95 shadow-sm"
+            >
+              <Users size={16} className="text-[#a3cc00]" />
+              Explore Talent Hub
+            </Link>
           </motion.div>
 
-          {/* Quick Stats Integrated neatly underneath */}
+          {/* Quick Stats */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -115,34 +97,29 @@ export function Hero() {
 
         </div>
 
-        {/* RIGHT SIDE: Premium 3D Vibe Bento Floating Card */}
-        <div className="lg:col-span-5 relative flex justify-center items-center z-10">
+        {/* RIGHT SIDE: Your Premium 3D Generated Image (Watermark Removed) */}
+        <div className="lg:col-span-6 relative flex justify-center items-center z-10">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-            className="relative w-full max-w-md"
+            transition={{ delay: 0.2, type: "spring", stiffness: 80 }}
+            className="relative w-full max-w-lg"
           >
-            {/* Main Interactive Floating Asset Box */}
-            <div className="relative z-10 w-full aspect-square rounded-[2.5rem] bg-gradient-to-tr from-[#ccff00]/30 to-emerald-400/20 p-8 flex items-center justify-center border border-white/60 shadow-2xl backdrop-blur-sm overflow-hidden group">
-              
-              {/* Creative vector mockup inside green backdrop */}
-              <img 
-                src="https://illustrations.popsy.co/lime/creative-work.svg" 
-                alt="UpNited Growth" 
-                className="w-4/5 h-4/5 object-contain transition-transform duration-700 group-hover:scale-105"
+            {/* Image Container with Subtle Floating Animation */}
+            <motion.div 
+              animate={{ y: [0, -12, 0] }}
+              transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+              className="w-full h-auto drop-shadow-2xl"
+            >
+              <Image 
+                src="/hero-3d.png" 
+                alt="UpNited Multi-Platform Growth Leaders" 
+                width={600} 
+                height={600}
+                priority
+                className="w-full h-auto object-contain rounded-3xl"
               />
-              
-              {/* Live floating animation badge */}
-              <motion.div 
-                animate={{ y: [0, -10, 0] }}
-                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                className="absolute top-8 right-6 bg-white/90 p-3 rounded-2xl border border-slate-100 shadow-lg backdrop-blur-md flex items-center gap-2"
-              >
-                <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-xs font-bold text-slate-800">Talent Hub Live 🚀</span>
-              </motion.div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
@@ -153,8 +130,6 @@ export function Hero() {
           <span className="text-slate-500 font-semibold tracking-wider uppercase text-xs text-center lg:text-left">
             Trusted Partner Companies:
           </span>
-          
-          {/* Logo container. Once you have Google Drive links, just swap out the src urls below */}
           <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12 opacity-60 hover:opacity-80 transition-opacity">
             <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" className="h-5 sm:h-6 object-contain grayscale hover:grayscale-0 transition-all" />
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Forbes_logo.svg" alt="Forbes" className="h-5 sm:h-6 object-contain grayscale hover:grayscale-0 transition-all" />
