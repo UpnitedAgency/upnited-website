@@ -8,7 +8,7 @@ export const siteConfig = {
   whatsappNumber: "94728008448",
   email: "Upnited.marketing@gmail.com",
   phone: "94728008448",
-  location: "battharamulla, Sri Lanka",
+  location: "Battharamulla, Sri Lanka",
   social: {
     facebook: "https://facebook.com/upnited",
     instagram: "https://instagram.com/upnited",
