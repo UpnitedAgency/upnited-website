@@ -11,16 +11,70 @@ export function BookingSection() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Form එකේ අනිත් දත්ත track කරන්න state එකක් හැදුවා
+  const [bookingData, setBookingData] = useState({
+    name: "",
+    email: "",
+    date: "",
+    meetingType: "Discovery Call",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setBookingData({
+      ...bookingData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedTime) return;
+    if (!selectedTime) {
+      setErrorMessage("Please select a time slot.");
+      return;
+    }
+    
     setLoading(true);
-    // TODO: Connect to Supabase - insert into `appointments` table
-    setTimeout(() => {
+    setErrorMessage(null);
+
+    // Web3Forms එකට යවන දත්ත structure එක
+    const sendData = {
+      access_key: "c8105b3b-3479-4a0d-9ca4-3e0b692d00b6",
+      subject: "New Consultation Booking Request",
+      name: bookingData.name,
+      email: bookingData.email,
+      preferred_date: bookingData.date,
+      meeting_type: bookingData.meetingType,
+      selected_time_slot: selectedTime,
+    };
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(sendData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitted(true);
+        // Form එක reset කරනවා
+        setBookingData({ name: "", email: "", date: "", meetingType: "Discovery Call" });
+      } else {
+        console.error("Web3Forms Error:", data);
+        setErrorMessage(data.message || "Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error("Fetch Error:", error);
+      setErrorMessage("Network error. Please check your internet connection.");
+    } finally {
       setLoading(false);
-      setSubmitted(true);
-    }, 900);
+    }
   };
 
   if (submitted) {
@@ -30,11 +84,17 @@ export function BookingSection() {
         animate={{ opacity: 1, scale: 1 }}
         className="flex flex-col items-center justify-center rounded-3xl border border-border-color bg-surface p-12 text-center"
       >
-        <CheckCircle2 size={48} className="text-brand-secondary" />
+        <CheckCircle2 size={48} className="text-emerald-500" />
         <h3 className="mt-4 font-display text-xl font-bold">Appointment Requested!</h3>
         <p className="mt-2 max-w-sm text-sm text-muted">
           We&apos;ll confirm your {selectedTime} slot via email or WhatsApp shortly.
         </p>
+        <button 
+          onClick={() => { setSubmitted(false); setSelectedTime(null); }}
+          className="mt-5 text-xs text-brand-primary underline"
+        >
+          Book another slot
+        </button>
       </motion.div>
     );
   }
@@ -52,8 +112,11 @@ export function BookingSection() {
           <label htmlFor="apt-name" className="mb-1.5 block text-sm font-medium">Full Name</label>
           <input
             id="apt-name"
+            name="name"
             required
             type="text"
+            value={bookingData.name}
+            onChange={handleInputChange}
             placeholder="Your name"
             className="w-full rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand-primary"
           />
@@ -62,8 +125,11 @@ export function BookingSection() {
           <label htmlFor="apt-email" className="mb-1.5 block text-sm font-medium">Email Address</label>
           <input
             id="apt-email"
+            name="email"
             required
             type="email"
+            value={bookingData.email}
+            onChange={handleInputChange}
             placeholder="you@example.com"
             className="w-full rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand-primary"
           />
@@ -72,8 +138,11 @@ export function BookingSection() {
           <label htmlFor="apt-date" className="mb-1.5 block text-sm font-medium">Preferred Date</label>
           <input
             id="apt-date"
+            name="date"
             required
             type="date"
+            value={bookingData.date}
+            onChange={handleInputChange}
             className="w-full rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand-primary"
           />
         </div>
@@ -81,6 +150,9 @@ export function BookingSection() {
           <label htmlFor="apt-type" className="mb-1.5 block text-sm font-medium">Meeting Type</label>
           <select
             id="apt-type"
+            name="meetingType"
+            value={bookingData.meetingType}
+            onChange={handleInputChange}
             className="w-full rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand-primary"
           >
             {meetingTypes.map((type) => (
@@ -112,6 +184,10 @@ export function BookingSection() {
           ))}
         </div>
       </div>
+
+      {errorMessage && (
+        <p className="mt-4 text-sm font-medium text-red-500">{errorMessage}</p>
+      )}
 
       <button
         type="submit"
