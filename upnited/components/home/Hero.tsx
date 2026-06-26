@@ -1,135 +1,156 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Users, Briefcase } from "lucide-react";
+import { Search, ArrowUpRight, Sparkles } from "lucide-react";
 
 export function Hero() {
-  return (
-    <section className="relative overflow-hidden pt-16 pb-20 sm:pt-24 sm:pb-28">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -top-40 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-brand-primary/20 blur-3xl animate-glow" />
-        <div className="absolute top-40 right-0 h-[24rem] w-[24rem] rounded-full bg-brand-secondary/20 blur-3xl animate-glow" />
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
-      </div>
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedService, setSelectedService] = useState("Social Media");
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
+  return (
+    <section className="relative min-h-screen bg-[#f4f7f4] pt-28 pb-16 text-slate-900 px-4 sm:px-6 lg:px-8 overflow-hidden flex flex-col justify-between">
+      
+      {/* Background soft glow updates */}
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#ccff00]/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="mx-auto max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center my-auto">
+        
+        {/* Left Side: Content & Interactive Search Bar */}
+        <div className="lg:col-span-7 text-center lg:text-left z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-border-color bg-surface px-4 py-1.5 text-sm font-medium text-foreground/70"
+            className="inline-flex items-center gap-2 rounded-full bg-white border border-slate-200 px-4 py-1.5 text-xs font-semibold shadow-sm mb-6"
           >
-            <Sparkles size={14} className="text-brand-primary" />
-            Sri Lanka&apos;s growth platform for business &amp; talent
+            <Sparkles size={14} className="text-[#a3cc00]" />
+            Modernizing Next-Gen Marketing Experience
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="font-display text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-6xl"
+            transition={{ delay: 0.1 }}
+            className="font-display text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-950 leading-[1.1]"
           >
-            Connecting{" "}
-            <span className="gradient-text">Businesses</span>,{" "}
-            <span className="gradient-text">Talent</span> &amp;{" "}
-            <span className="gradient-text">Growth</span>
+            Modernizing the <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-slate-800 to-[#a3cc00]">
+              Brand Experience
+            </span>
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 24 }}
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="mx-auto mt-6 max-w-2xl text-base text-muted sm:text-lg"
+            transition={{ delay: 0.2 }}
+            className="mt-6 text-base sm:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0"
           >
-            UpNited is the all-in-one platform where ambitious brands get
-            world-class marketing, remote teams stay connected, and Sri
-            Lanka&apos;s most talented people get discovered.
+            Take control of your digital presence with tools and strategies designed to simplify, streamline, and personalize your business growth.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
+          {/* Interactive Search Bar inspired by Quiety */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            transition={{ delay: 0.3 }}
+            className="mt-10 max-w-2xl mx-auto lg:mx-0 p-2 rounded-2xl sm:rounded-full bg-white border border-slate-200 shadow-xl shadow-slate-200/50 flex flex-col sm:flex-row items-center gap-2"
           >
-            <Link
-              href="/contact"
-              className="group flex w-full items-center justify-center gap-2 rounded-full gradient-bg px-8 py-3.5 text-sm font-semibold text-white shadow-xl shadow-brand-primary/30 transition-transform hover:scale-105 sm:w-auto"
-            >
-              Start Your Project
-              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-            <Link
-              href="/talent-hub"
-              className="flex w-full items-center justify-center gap-2 rounded-full border border-border-color bg-surface px-8 py-3.5 text-sm font-semibold transition-colors hover:border-brand-primary hover:text-brand-primary sm:w-auto"
-            >
-              <Users size={18} />
-              Explore Talent Hub
-            </Link>
+            <div className="flex items-center gap-2 w-full px-3 py-2 sm:py-0">
+              <Search className="text-slate-400 shrink-0" size={18} />
+              <input 
+                type="text" 
+                placeholder="etc: Manage Social Media..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-transparent text-sm outline-none text-slate-800"
+              />
+            </div>
+            
+            <div className="flex items-center gap-2 w-full sm:w-auto shrink-0 border-t sm:border-t-0 sm:border-l border-slate-100 pt-2 sm:pt-0 sm:pl-2">
+              <select 
+                value={selectedService}
+                onChange={(e) => setSelectedService(e.target.value)}
+                className="w-full sm:w-40 bg-transparent text-sm font-semibold outline-none text-slate-700 py-2 sm:py-0 px-2"
+              >
+                <option value="Social Media">Social Media</option>
+                <option value="Web Dev">Web Dev</option>
+                <option value="Branding">Branding</option>
+                <option value="Video Production">Video Prod.</option>
+              </select>
+
+              <a 
+                href="#booking"
+                className="w-full sm:w-auto bg-black hover:bg-slate-900 text-white p-3 rounded-xl sm:rounded-full transition-all flex items-center justify-center gap-1 font-semibold text-sm shrink-0 shadow-md shadow-black/10"
+              >
+                Get Started
+                <ArrowUpRight size={16} className="text-[#ccff00]" />
+              </a>
+            </div>
           </motion.div>
 
-          <motion.div
+          {/* Popular Tag Suggestions */}
+          <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="mt-16 grid grid-cols-3 gap-4 sm:gap-8"
+            transition={{ delay: 0.4 }}
+            className="mt-4 flex flex-wrap justify-center lg:justify-start gap-2 items-center text-xs text-slate-500"
           >
-            {[
-              { value: "150+", label: "Projects Delivered" },
-              { value: "500+", label: "Talent Profiles" },
-              { value: "9", label: "Core Services" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="font-display text-2xl font-extrabold sm:text-4xl">{stat.value}</p>
-                <p className="mt-1 text-xs text-muted sm:text-sm">{stat.label}</p>
-              </div>
+            <span className="font-medium">Popular Needs:</span>
+            {["Meta Ads", "Content Creation", "Website Design", "SEO"].map((tag) => (
+              <button 
+                key={tag}
+                onClick={() => setSearchQuery(tag)}
+                className="hover:text-[#a3cc00] underline transition-colors"
+              >
+                {tag}
+              </button>
             ))}
           </motion.div>
         </div>
+
+        {/* Right Side: Visual Graphic & Micro-interactions */}
+        <div className="lg:col-span-5 relative flex justify-center items-center z-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
+            className="relative w-full max-w-md"
+          >
+            {/* Main Interactive Floating Card Asset */}
+            <div className="relative z-10 w-full aspect-square rounded-[2.5rem] bg-gradient-to-tr from-[#ccff00]/30 to-emerald-400/20 p-8 flex items-center justify-center border border-white/60 shadow-2xl backdrop-blur-sm overflow-hidden group">
+              <img 
+                src="https://illustrations.popsy.co/lime/creative-work.svg" 
+                alt="UpNited Creative Agency" 
+                className="w-4/5 h-4/5 object-contain transition-transform duration-700 group-hover:scale-105"
+              />
+              
+              {/* Floating Stat Widget */}
+              <motion.div 
+                animate={{ y: [0, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                className="absolute top-8 right-4 bg-white/90 p-3 rounded-2xl border border-slate-100 shadow-lg backdrop-blur-md flex items-center gap-2"
+              >
+                <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-bold text-slate-800">Growth: +185%</span>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-        className="mx-auto mt-16 max-w-5xl px-4 sm:px-6 lg:px-8"
-      >
-        <div className="relative overflow-hidden rounded-3xl border border-border-color bg-surface p-1 shadow-2xl">
-          <div className="rounded-[1.3rem] bg-gradient-to-br from-brand-primary/10 via-surface to-brand-secondary/10 p-8 sm:p-14">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-              {[
-                { icon: Briefcase, title: "Digital Marketing", desc: "Strategy-driven growth for your brand" },
-                { icon: Users, title: "Workspace", desc: "Secure portal for our remote team" },
-                { icon: Sparkles, title: "Talent Hub", desc: "Discover Sri Lanka's creative talent" },
-              ].map((item, i) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.6 + i * 0.1 }}
-                  className="animate-float rounded-2xl border border-border-color bg-surface-2 p-5 text-left"
-                  style={{ animationDelay: `${i * 0.7}s` }}
-                >
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl gradient-bg text-white">
-                    <item.icon size={20} />
-                  </div>
-                  <p className="font-display text-sm font-bold">{item.title}</p>
-                  <p className="mt-1 text-xs text-muted">{item.desc}</p>
-                </motion.div>
-              ))}
-            </div>
+      {/* Bottom Brand Bar / Trust Banner */}
+      <div className="w-full border-t border-slate-200/60 bg-white/40 backdrop-blur-md py-6 mt-12 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto flex flex-wrap justify-center lg:justify-between items-center gap-6 text-sm text-slate-400 font-medium">
+          <span className="text-slate-500 font-semibold tracking-wider uppercase text-xs">Trusted Partner Companies:</span>
+          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12 text-lg sm:text-xl font-bold tracking-tight text-slate-400">
+            <span className="hover:text-slate-800 transition-colors cursor-default">VISA</span>
+            <span className="hover:text-slate-800 transition-colors cursor-default">PLAID</span>
+            <span className="hover:text-slate-800 transition-colors cursor-default">Forbes</span>
+            <span className="hover:text-slate-800 transition-colors cursor-default">Deloitte.</span>
           </div>
         </div>
-      </motion.div>
+      </div>
+
     </section>
   );
 }
