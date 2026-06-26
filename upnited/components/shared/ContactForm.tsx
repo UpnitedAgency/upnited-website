@@ -20,15 +20,41 @@ const services = [
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    // TODO: Connect to Supabase - insert into `contact_submissions` table
-    setTimeout(() => {
+    setErrorMessage(null);
+
+    const formData = new FormData(e.currentTarget);
+
+    // 1. Oyage Web3Forms Access Key eka
+    formData.append("access_key", "c8105b3b-3479-4a0d-9ca4-3e0b692d00b6");
+
+    // 2. Email eka inbox ekata eddi watena Subject eka (Optional)
+    formData.append("subject", "New Lead from Website Contact Form");
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        console.error("Web3Forms Error:", data);
+        setErrorMessage(data.message || "Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error("Fetch Error:", error);
+      setErrorMessage("Network error. Please check your internet connection.");
+    } finally {
       setLoading(false);
-      setSubmitted(true);
-    }, 900);
+    }
   };
 
   if (submitted) {
@@ -56,6 +82,7 @@ export function ContactForm() {
           </label>
           <input
             id="name"
+            name="name"
             required
             type="text"
             placeholder="Your name"
@@ -68,6 +95,7 @@ export function ContactForm() {
           </label>
           <input
             id="email"
+            name="email"
             required
             type="email"
             placeholder="you@example.com"
@@ -80,6 +108,7 @@ export function ContactForm() {
           </label>
           <input
             id="phone"
+            name="phone"
             type="tel"
             placeholder="+94 7X XXX XXXX"
             className="w-full rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand-primary"
@@ -91,6 +120,7 @@ export function ContactForm() {
           </label>
           <select
             id="service"
+            name="service"
             className="w-full rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand-primary"
           >
             {services.map((s) => (
@@ -106,6 +136,7 @@ export function ContactForm() {
           </label>
           <textarea
             id="message"
+            name="message"
             required
             rows={5}
             placeholder="What are you looking to achieve?"
@@ -113,6 +144,10 @@ export function ContactForm() {
           />
         </div>
       </div>
+
+      {errorMessage && (
+        <p className="mt-4 text-sm font-medium text-red-500">{errorMessage}</p>
+      )}
 
       <button
         type="submit"
