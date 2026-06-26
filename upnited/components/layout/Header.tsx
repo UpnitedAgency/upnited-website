@@ -1,118 +1,90 @@
 "use client";
 
+import { useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image"; // Next.js Image component එක import කරා
-import { useState, useEffect } from "react";
-import { Menu, X, Sun, Moon, ArrowUpRight } from "lucide-react";
-import { useTheme } from "@/components/shared/ThemeProvider";
-import { mainNav, siteConfig } from "@/lib/constants";
 
-export function Header() {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+export default function Header() {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const navItems = [
+    { name: "Home", href: "/" },
+    { name: "Services", href: "/services" },
+    { name: "Portfolio", href: "/portfolio" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Talent Hub", href: "/talent-hub" },
+    { name: "About", href: "/about" },
+    { name: "Contact", href: "/contact" },
+  ];
 
   return (
-    <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled ? "glass border-b border-border-color shadow-sm" : "bg-transparent"
-      }`}
-    >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2 group" onClick={() => setOpen(false)}>
-          {/* මෙතනට ඔයාගේ logo.jpg එක ඇතුළත් කරා */}
-          <div className="relative h-9 w-9 overflow-hidden rounded-xl transition-transform group-hover:scale-105">
-            <Image
-              src="/logo.jpg"
-              alt="UpNited Logo"
-              fill
-              className="object-cover"
-              priority
-            />
+    <header className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-slate-100 z-50 px-6 py-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        
+        {/* LOGO AREA */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-10 h-10 bg-[#1e4e5e] text-[#dffe00] font-black text-xl flex items-center justify-center rounded-xl shadow-sm group-hover:scale-105 transition-transform">
+            U
           </div>
-          <span className="font-display text-lg font-bold tracking-tight">
-            {siteConfig.shortName}
+          <span className="text-xl font-black text-[#1e4e5e] tracking-tight">
+            UpNited
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          {mainNav.map((item) => (
+        {/* APPLE-STYLE LIQUID NAVIGATION */}
+        <nav className="hidden md:flex items-center gap-1 bg-slate-100/60 p-1.5 rounded-full relative">
+          {navItems.map((item, index) => (
             <Link
-              key={item.href}
+              key={item.name}
               href={item.href}
-              className="rounded-full px-4 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-surface hover:text-foreground"
+              className="relative px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors duration-300 rounded-full"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
-              {item.label}
+              {/* Liquid Hover Backing */}
+              {hoveredIndex === index && (
+                <motion.span
+                  layoutId="header-liquid"
+                  className="absolute inset-0 bg-[#dffe00] rounded-full -z-10"
+                  transition={{
+                    type: "spring",
+                    stiffness: 380,
+                    damping: 30,
+                  }}
+                />
+              )}
+              <span className="relative z-10">{item.name}</span>
             </Link>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border-color text-foreground/70 transition-colors hover:border-brand-primary hover:text-brand-primary"
-          >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-          <Link
-            href="/contact"
-            className="group flex items-center gap-1.5 rounded-full gradient-bg px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-primary/25 transition-transform hover:scale-105"
-          >
-            Get Started
-            <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        {/* CUSTOM THEME GET STARTED BUTTON */}
+        <div className="flex items-center gap-4">
+          <Link href="/workspace">
+            <motion.button
+              whileHover={{ scale: 1.03, boxShadow: "0px 10px 25px rgba(30, 78, 94, 0.15)" }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-[#1e4e5e] text-white hover:bg-[#153743] px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 transition-colors border border-transparent hover:border-[#dffe00]/30"
+            >
+              Get Started
+              <svg 
+                width="14" 
+                height="14" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </motion.button>
           </Link>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border-color text-foreground/70"
-          >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-          <button
-            onClick={() => setOpen((o) => !o)}
-            aria-label="Toggle menu"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border-color"
-          >
-            {open ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
       </div>
-
-      {open && (
-        <div className="glass border-t border-border-color px-4 pb-6 pt-2 lg:hidden">
-          <nav className="flex flex-col gap-1">
-            {mainNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-xl px-4 py-3 text-sm font-medium text-foreground/80 transition-colors hover:bg-surface hover:text-foreground"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link
-              href="/contact"
-              onClick={() => setOpen(false)}
-              className="mt-2 flex items-center justify-center gap-1.5 rounded-full gradient-bg px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-primary/25"
-            >
-              Get Started
-              <ArrowUpRight size={16} />
-            </Link>
-          </nav>
-        </div>
-      )}
     </header>
   );
 }
