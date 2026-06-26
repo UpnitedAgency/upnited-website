@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase"; 
-import { UserPlus, Key, Mail, Lock, AlertCircle, User, Phone, Calendar, Briefcase } from "lucide-react";
 
 export default function WorkspacePage() {
   const [user, setUser] = useState<any>(null);
@@ -82,7 +81,7 @@ export default function WorkspacePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#f4f7f4] flex items-center justify-center text-slate-900 font-bold">
-        Loading UpNited Workspace...
+        Connecting to UpNited Workspace...
       </div>
     );
   }
@@ -107,10 +106,9 @@ export default function WorkspacePage() {
             </div>
 
             {authMessage && (
-              <div className={`p-4 rounded-xl mb-6 text-xs font-semibold flex items-start gap-2.5 leading-relaxed ${
+              <div className={`p-4 rounded-xl mb-6 text-xs font-semibold leading-relaxed ${
                 authMessage.type === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : "bg-red-50 text-red-600 border border-red-100"
               }`}>
-                <AlertCircle size={16} className="shrink-0 mt-0.5" />
                 <span>{authMessage.text}</span>
               </div>
             )}
@@ -120,122 +118,100 @@ export default function WorkspacePage() {
                 <>
                   <div>
                     <label className="text-xs font-bold text-slate-600 block mb-1">Full Name</label>
-                    <div className="relative">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                      <input
-                        type="text"
-                        placeholder="John Doe"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        required
-                      />
-                    </div>
+                    <input
+                      type="text"
+                      placeholder="John Doe"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      required
+                    />
                   </div>
 
                   <div>
                     <label className="text-xs font-bold text-slate-600 block mb-1">Mobile Number</label>
-                    <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                      <input
-                        type="tel"
-                        placeholder="0771234567"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
-                        value={mobileNumber}
-                        onChange={(e) => setMobileNumber(e.target.value)}
-                        required
-                      />
-                    </div>
+                    <input
+                      type="tel"
+                      placeholder="0771234567"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value)}
+                      required
+                    />
                   </div>
 
                   <div>
                     <label className="text-xs font-bold text-slate-600 block mb-1">Birthday</label>
-                    <div className="relative">
-                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                      <input
-                        type="date"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
-                        value={birthday}
-                        onChange={(e) => setBirthday(e.target.value)}
-                        required
-                      />
-                    </div>
+                    <input
+                      type="date"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                      value={birthday}
+                      onChange={(e) => setBirthday(e.target.value)}
+                      required
+                    />
                   </div>
 
                   <div>
                     <label className="text-xs font-bold text-slate-600 block mb-1">Company Position</label>
-                    <div className="relative">
-                      <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                      <select
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e] appearance-none"
-                        value={position}
-                        onChange={(e) => setPosition(e.target.value)}
-                        required
-                      >
-                        <option value="Designer">Designer</option>
-                        <option value="Video Editor">Video Editor</option>
-                        <option value="Sales Executive">Sales Executive</option>
-                        <option value="Admin">Admin</option>
-                        <option value="HR">HR</option>
-                        <option value="Stuff">Stuff</option>
-                      </select>
-                    </div>
+                    <select
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                      value={position}
+                      onChange={(e) => setPosition(e.target.value)}
+                      required
+                    >
+                      <option value="Designer">Designer</option>
+                      <option value="Video Editor">Video Editor</option>
+                      <option value="Sales Executive">Sales Executive</option>
+                      <option value="Admin">Admin</option>
+                      <option value="HR">HR</option>
+                      <option value="Stuff">Stuff</option>
+                    </select>
                   </div>
                 </>
               )}
 
               <div>
                 <label className="text-xs font-bold text-slate-600 block mb-1">Work Email</label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                  <input
-                    type="email"
-                    placeholder="employee@upnited.com"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
+                <input
+                  type="email"
+                  placeholder="employee@upnited.com"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
 
               <div>
                 <label className="text-xs font-bold text-slate-600 block mb-1">Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
               </div>
 
               {isSignUp && (
                 <div>
                   <label className="text-xs font-bold text-slate-600 block mb-1">Confirm Password</label>
-                  <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                    />
-                  </div>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
                 </div>
               )}
 
               <button
                 type="submit"
-                className="w-full bg-[#1e4e5e] hover:bg-[#153743] text-white rounded-xl py-3.5 text-sm font-bold flex items-center justify-center gap-2 mt-2 transition-all active:scale-95 shadow-md"
+                className="w-full bg-[#1e4e5e] hover:bg-[#153743] text-white rounded-xl py-3.5 text-sm font-bold mt-2 transition-all active:scale-95 shadow-md"
               >
-                {isSignUp ? <UserPlus size={16} /> : <Key size={16} />}
                 {isSignUp ? "Request Verification & Register" : "Sign In"}
               </button>
             </form>
@@ -250,7 +226,6 @@ export default function WorkspacePage() {
             </div>
           </div>
         ) : (
-          /* Dashboard */
           <div>
             <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
               <div>
