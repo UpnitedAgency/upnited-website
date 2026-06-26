@@ -2,10 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 
-// සේවා 6ම නූලටම මෙතන තියෙනවා මචං
 const servicesData = [
   {
     id: "01",
@@ -13,19 +11,19 @@ const servicesData = [
     desc: "We plan, create, and manage your social media presence to drive engagement and brand loyalty.",
     image: "/services/social-3d.png", 
     features: [
-      "Content calendars & scheduling",
+      "Content calendars and scheduling",
       "Community management",
-      "Analytics & monthly reporting",
+      "Analytics and monthly reporting",
       "Platform-specific strategy",
     ],
   },
   {
     id: "02",
-    title: "Branding & Graphic Design",
+    title: "Branding and Graphic Design",
     desc: "Crafting memorable brand identities, logos, and visual assets that set your business apart from the competition.",
     image: "/services/branding-3d.png",
     features: [
-      "Logo & Brand Identity",
+      "Logo and Brand Identity",
       "Marketing Collateral",
       "Social Media Templates",
       "Brand Style Guides",
@@ -33,26 +31,26 @@ const servicesData = [
   },
   {
     id: "03",
-    title: "Website Design & Development",
+    title: "Website Design and Development",
     desc: "Fast, responsive, and conversion-focused websites tailored specifically for your business goals.",
     image: "/services/web-3d.png",
     features: [
       "Custom UI/UX Design",
-      "Next.js & React Development",
-      "SEO & Performance Optimization",
+      "Next.js and React Development",
+      "SEO and Performance Optimization",
       "E-commerce Integration",
     ],
   },
   {
     id: "04",
-    title: "Meta & Google Ads",
+    title: "Meta and Google Ads",
     desc: "High-performing paid ad campaigns that target the right audience to deliver maximum return on investment (ROI).",
     image: "/services/ads-3d.png",
     features: [
-      "Campaign Setup & Strategy",
+      "Campaign Setup and Strategy",
       "Audience Targeting",
-      "A/B Testing & Optimization",
-      "ROI Tracking & Dashboards",
+      "A/B Testing and Optimization",
+      "ROI Tracking and Dashboards",
     ],
   },
   {
@@ -61,22 +59,22 @@ const servicesData = [
     desc: "High-quality, scroll-stopping video content designed for modern social media platforms and branding.",
     image: "/services/video-3d.png",
     features: [
-      "Scriptwriting & Storyboarding",
+      "Scriptwriting and Storyboarding",
       "Professional Shooting",
-      "Video Editing & Motion Graphics",
+      "Video Editing and Motion Graphics",
       "Social Media Reels / Shorts",
     ],
   },
   {
     id: "06",
-    title: "Drone Photography & Videography",
+    title: "Drone Photography and Videography",
     desc: "Stunning, cinematic aerial views and footage to elevate your commercial projects and brand storytelling.",
     image: "/services/drone-3d.png",
     features: [
       "4K Cinematic Aerial Footage",
       "Commercial Property Shoots",
       "Event Drone Coverage",
-      "Color Grading & Post-Production",
+      "Color Grading and Post-Production",
     ],
   },
 ];
@@ -100,9 +98,10 @@ export default function ServicesPage() {
           </p>
         </div>
 
-        {/* Services List with 3D Images Line */}
+        {/* Services List */}
         <div className="flex flex-col gap-12 w-full">
           {servicesData.map((service, index) => {
+            }
             return (
               <motion.div
                 key={service.id}
@@ -117,4 +116,59 @@ export default function ServicesPage() {
                 <div className="absolute top-0 left-0 h-[4px] w-16 bg-[#ccff00]" />
 
                 {/* Left Side: 3D Image Line Box */}
-                <div className="lg:col-span-4 flex justify-center items-center
+                <div className="lg:col-span-4 flex justify-center items-center bg-slate-50 rounded-3xl p-6 aspect-square max-w-[260px] w-full mx-auto lg:mx-0 shadow-inner group">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-md"
+                  />
+                </div>
+
+                {/* Right Side: Content Box */}
+                <div className="lg:col-span-8 flex flex-col justify-between h-full">
+                  <div>
+                    <span className="text-xs font-bold text-[#a3cc00] tracking-wider uppercase">
+                      Service {service.id}
+                    </span>
+                    <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-950 mt-1">
+                      {service.title}
+                    </h3>
+                    <p className="text-sm sm:text-base text-slate-600 mt-3 max-w-2xl leading-relaxed">
+                      {service.desc}
+                    </p>
+                  </div>
+
+                  {/* What's Included */}
+                  <div className="mt-8">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">What is Included</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {service.features.map((feature) => (
+                        <div key={feature} className="flex items-center gap-2.5 text-sm font-medium text-slate-700">
+                          <CheckCircle2 size={16} className="text-[#a3cc00] shrink-0" />
+                          <span>{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <div className="mt-8 pt-6 border-t border-slate-100 flex justify-end">
+                    <Link
+                      href="/contact"
+                      className="group inline-flex items-center gap-2 rounded-full bg-black hover:bg-slate-900 text-white px-6 py-3 text-xs font-bold transition-all shadow-md active:scale-95"
+                    >
+                      Start a Conversation
+                      <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </div>
+                </div>
+
+              </motion.div>
+            );
+          })}
+        </div>
+
+      </div>
+    </section>
+  );
+}
