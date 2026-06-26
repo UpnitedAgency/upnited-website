@@ -2,35 +2,35 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase"; 
-import { CheckCircle2, Circle, LogOut, Plus, ShieldCheck, UserPlus, Key, Mail, Lock, AlertCircle, User, Phone, Calendar, Briefcase } from "lucide-react";
 
 export default function WorkspacePage() {
   const [user, setUser] = useState<any>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  
+  // Form fields
   const [fullName, setFullName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [birthday, setBirthday] = useState("");
   const [position, setPosition] = useState("Designer");
+
   const [isSignUp, setIsSignUp] = useState(false);
   const [authMessage, setAuthMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [tasks, setTasks] = useState<any[]>([]);
-  const [newTask, setNewTask] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
-      if (session?.user) fetchTasks(session.user.id);
       setLoading(false);
     });
-  }, []);
 
-  const fetchTasks = async (userId: string) => {
-    const { data } = await supabase.from("tasks").select("*").eq("user_id", userId);
-    if (data) setTasks(data);
-  };
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,53 +41,211 @@ export default function WorkspacePage() {
         setAuthMessage({ type: "error", text: "Passwords do not match!" });
         return;
       }
-      const { error } = await supabase.auth.signUp({
-        email, password,
-        options: { data: { full_name: fullName, mobile: mobileNumber, birthday, position } }
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            mobile: mobileNumber,
+            birthday: birthday,
+            position: position
+          }
+        }
       });
-      if (error) setAuthMessage({ type: "error", text: error.message });
-      else setAuthMessage({ type: "success", text: "Check your email to verify!" });
+      
+      if (error) {
+        setAuthMessage({ type: "error", text: error.message });
+      } else if (data?.user) {
+        setAuthMessage({ 
+          type: "success", 
+          text: "Registration successful! Please check your inbox and confirm your email to activate your account." 
+        });
+        setFullName("");
+        setMobileNumber("");
+        setBirthday("");
+        setPassword("");
+        setConfirmPassword("");
+      }
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setAuthMessage({ type: "error", text: error.message });
-      else window.location.reload();
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setAuthMessage({ type: "error", text: error.message });
+      } else if (data?.user) {
+        setUser(data.user);
+      }
     }
   };
 
-  if (loading) return <div className="p-10 text-center">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#f4f7f4] flex items-center justify-center text-slate-900 font-bold">
+        Connecting to UpNited Workspace...
+      </div>
+    );
+  }
 
   return (
-    <section className="min-h-screen py-20 flex justify-center items-center bg-gray-50 px-4">
-      <div className="max-w-md w-full bg-white p-8 rounded-3xl shadow-lg border">
+    <section className="bg-[#f4f7f4] min-h-screen py-24 px-4 text-slate-900 flex justify-center items-center">
+      <div className="max-w-md w-full bg-white rounded-[2.5rem] border border-slate-200/80 p-8 sm:p-10 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 left-0 h-[5px] w-full bg-[#1e4e5e]" />
+
         {!user ? (
-          <form onSubmit={handleAuth} className="flex flex-col gap-4">
-            <h2 className="text-xl font-bold text-center mb-4">{isSignUp ? "Register" : "Sign In"}</h2>
-            {authMessage && <p className="text-xs text-red-500">{authMessage.text}</p>}
-            
-            {isSignUp && (
-              <>
-                <input className="w-full border p-3 rounded-xl" placeholder="Full Name" onChange={(e) => setFullName(e.target.value)} required />
-                <input className="w-full border p-3 rounded-xl" placeholder="Mobile" onChange={(e) => setMobileNumber(e.target.value)} required />
-                <input type="date" className="w-full border p-3 rounded-xl" onChange={(e) => setBirthday(e.target.value)} required />
-                <select className="w-full border p-3 rounded-xl" onChange={(e) => setPosition(e.target.value)}>
-                  {["Designer", "Video Editor", "Sales Executive", "Admin", "HR", "Stuff"].map(p => <option key={p} value={p}>{p}</option>)}
-                </select>
-              </>
+          <div>
+            <div className="text-center mb-6">
+              <div className="w-14 h-14 bg-[#1e4e5e] text-white font-black text-2xl flex items-center justify-center rounded-2xl mx-auto shadow-md">
+                U
+              </div>
+              <h2 className="text-2xl font-extrabold text-[#1e4e5e] mt-4 tracking-tight">
+                {isSignUp ? "Register Profile" : "UpNited Workspace"}
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                {isSignUp ? "Provide your details to register as a team member" : "Sign in with your employee credentials"}
+              </p>
+            </div>
+
+            {authMessage && (
+              <div className={`p-4 rounded-xl mb-6 text-xs font-semibold leading-relaxed ${
+                authMessage.type === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : "bg-red-50 text-red-600 border border-red-100"
+              }`}>
+                <span>{authMessage.text}</span>
+              </div>
             )}
-            <input type="email" className="w-full border p-3 rounded-xl" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
-            <input type="password" className="w-full border p-3 rounded-xl" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
-            {isSignUp && <input type="password" className="w-full border p-3 rounded-xl" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} required />}
-            
-            <button className="w-full bg-black text-white p-3 rounded-xl font-bold">{isSignUp ? "Register" : "Sign In"}</button>
-            <button type="button" className="text-xs underline" onClick={() => setIsSignUp(!isSignUp)}>
-              {isSignUp ? "Already have account? Sign In" : "New Employee? Register here"}
-            </button>
-          </form>
+
+            <form onSubmit={handleAuth} className="flex flex-col gap-3.5">
+              {isSignUp && (
+                <>
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">Full Name</label>
+                    <input
+                      type="text"
+                      placeholder="John Doe"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">Mobile Number</label>
+                    <input
+                      type="tel"
+                      placeholder="0771234567"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">Birthday</label>
+                    <input
+                      type="date"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                      value={birthday}
+                      onChange={(e) => setBirthday(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">Company Position</label>
+                    <select
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                      value={position}
+                      onChange={(e) => setPosition(e.target.value)}
+                      required
+                    >
+                      <option value="Designer">Designer</option>
+                      <option value="Video Editor">Video Editor</option>
+                      <option value="Sales Executive">Sales Executive</option>
+                      <option value="Admin">Admin</option>
+                      <option value="HR">HR</option>
+                      <option value="Stuff">Stuff</option>
+                    </select>
+                  </div>
+                </>
+              )}
+
+              <div>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Work Email</label>
+                <input
+                  type="email"
+                  placeholder="employee@upnited.com"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Password</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              {isSignUp && (
+                <div>
+                  <label className="text-xs font-bold text-slate-600 block mb-1">Confirm Password</label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1e4e5e]"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full bg-[#1e4e5e] hover:bg-[#153743] text-white rounded-xl py-3.5 text-sm font-bold mt-2 transition-all active:scale-95 shadow-md"
+              >
+                {isSignUp ? "Request Verification & Register" : "Sign In"}
+              </button>
+            </form>
+
+            <div className="text-center mt-6 border-t border-slate-100 pt-4">
+              <button
+                onClick={() => { setIsSignUp(!isSignUp); setAuthMessage(null); }}
+                className="text-xs font-bold text-[#1e4e5e] hover:underline"
+              >
+                {isSignUp ? "Already have an account? Sign In" : "New Employee? Register Profile here"}
+              </button>
+            </div>
+          </div>
         ) : (
           <div>
-            <h2 className="font-bold text-lg">Welcome!</h2>
-            <button onClick={() => supabase.auth.signOut().then(() => window.location.reload())} className="text-red-500 text-sm">Sign Out</button>
-            {/* Dashboard content */}
+            <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 block uppercase">Workspace Active</span>
+                <p className="text-sm font-bold text-slate-900 truncate max-w-[200px]">{user.email}</p>
+              </div>
+              <button
+                onClick={() => supabase.auth.signOut().then(() => window.location.reload())}
+                className="p-2.5 bg-slate-50 border border-slate-200 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all"
+              >
+                Sign Out
+              </button>
+            </div>
+
+            <p className="text-sm font-semibold text-center text-emerald-600">
+              Successfully Verified & Logged In! 🚀
+            </p>
+            <p className="text-xs text-center text-slate-500 mt-2">
+              (Dashboard එකේ ඊළඟ වැඩ කොටස කරන්න මම සූදානම් මචං)
+            </p>
           </div>
         )}
       </div>
