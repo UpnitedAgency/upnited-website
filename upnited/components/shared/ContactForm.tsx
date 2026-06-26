@@ -22,29 +22,54 @@ export function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Form එකේ input values ටික track කරන්න state එකක් හැදුවා
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    service: "Social Media Management",
+    message: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage(null);
 
-    const formData = new FormData(e.currentTarget);
-
-    // 1. Oyage Web3Forms Access Key eka
-    formData.append("access_key", "c8105b3b-3479-4a0d-9ca4-3e0b692d00b6");
-
-    // 2. Email eka inbox ekata eddi watena Subject eka (Optional)
-    formData.append("subject", "New Lead from Website Contact Form");
+    // Web3Forms එකට ඕන කරන API Object එක
+    const sendData = {
+      access_key: "c8105b3b-3479-4a0d-9ca4-3e0b692d00b6",
+      subject: "New Lead from Website Contact Form",
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      service: formData.service,
+      message: formData.message,
+    };
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(sendData),
       });
 
       const data = await response.json();
 
       if (data.success) {
         setSubmitted(true);
+        // Form එක clear කරනවා
+        setFormData({ name: "", email: "", phone: "", service: "Social Media Management", message: "" });
       } else {
         console.error("Web3Forms Error:", data);
         setErrorMessage(data.message || "Something went wrong. Please try again.");
@@ -64,11 +89,17 @@ export function ContactForm() {
         animate={{ opacity: 1, scale: 1 }}
         className="flex flex-col items-center justify-center rounded-3xl border border-border-color bg-surface p-12 text-center"
       >
-        <CheckCircle2 size={48} className="text-brand-secondary" />
+        <CheckCircle2 size={48} className="text-emerald-500" />
         <h3 className="mt-4 font-display text-xl font-bold">Message Sent!</h3>
         <p className="mt-2 max-w-sm text-sm text-muted">
           Thanks for reaching out. Our team will get back to you within 24 hours.
         </p>
+        <button 
+          onClick={() => setSubmitted(false)}
+          className="mt-5 text-xs text-brand-primary underline"
+        >
+          Send another message
+        </button>
       </motion.div>
     );
   }
@@ -85,6 +116,8 @@ export function ContactForm() {
             name="name"
             required
             type="text"
+            value={formData.name}
+            onChange={handleChange}
             placeholder="Your name"
             className="w-full rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand-primary"
           />
@@ -98,6 +131,8 @@ export function ContactForm() {
             name="email"
             required
             type="email"
+            value={formData.email}
+            onChange={handleChange}
             placeholder="you@example.com"
             className="w-full rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand-primary"
           />
@@ -110,6 +145,8 @@ export function ContactForm() {
             id="phone"
             name="phone"
             type="tel"
+            value={formData.phone}
+            onChange={handleChange}
             placeholder="+94 7X XXX XXXX"
             className="w-full rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand-primary"
           />
@@ -121,6 +158,8 @@ export function ContactForm() {
           <select
             id="service"
             name="service"
+            value={formData.service}
+            onChange={handleChange}
             className="w-full rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand-primary"
           >
             {services.map((s) => (
@@ -139,6 +178,8 @@ export function ContactForm() {
             name="message"
             required
             rows={5}
+            value={formData.message}
+            onChange={handleChange}
             placeholder="What are you looking to achieve?"
             className="w-full resize-none rounded-xl border border-border-color bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand-primary"
           />
