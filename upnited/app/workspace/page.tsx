@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase"; 
 import { CheckCircle2, Circle, LogOut, Plus, ShieldCheck, UserPlus, Key, Mail, Lock, AlertCircle } from "lucide-react";
 
-export default function EmployeePage() {
+export default function WorkspacePage() {
   const [user, setUser] = useState<any>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [authMessage, setAuthMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   
-  // Tasks Management
+  // Tasks Management States
   const [tasks, setTasks] = useState<any[]>([]);
   const [newTask, setNewTask] = useState("");
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,6 @@ export default function EmployeePage() {
   useEffect(() => {
     // Current Session Check
     supabase.auth.getSession().then(({ data: { session } }) => {
-      // මෙතනදී යූසර් ලොග් වෙලා හිටියත්, එයාගේ Email එක Verify වෙලාද කියලා බලනවා
       if (session?.user && session.user.email_confirmed_at) {
         setUser(session.user);
         fetchTasks(session.user.id);
@@ -43,6 +42,7 @@ export default function EmployeePage() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Database එකෙන් Tasks ඇදීම
   const fetchTasks = async (userId: string) => {
     const { data } = await supabase
       .from("tasks")
@@ -52,13 +52,12 @@ export default function EmployeePage() {
     if (data) setTasks(data);
   };
 
-  // Auth Action Handler
+  // Auth Submit Handler
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthMessage(null);
 
     if (isSignUp) {
-      // Sign Up Process
       const { data, error } = await supabase.auth.signUp({ email, password });
       
       if (error) {
@@ -66,14 +65,13 @@ export default function EmployeePage() {
       } else if (data?.user && !data.user.email_confirmed_at) {
         setAuthMessage({ 
           type: "success", 
-          text: "Registration successful! Please check your email inbox and click the verification link to activate your account." 
+          text: "Registration successful! We've sent a verification link to your email. Please check your inbox and click the link to activate your account before signing in." 
         });
         setEmail("");
         setPassword("");
-        setIsSignUp(false); // කෙලින්ම Sign In එකට හරවනවා
+        setIsSignUp(false);
       }
     } else {
-      // Sign In Process
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       
       if (error) {
@@ -81,13 +79,12 @@ export default function EmployeePage() {
         return;
       }
 
-      // වැදගත්ම හරිය: යූසර් පාස්වර්ඩ් හරි වුණත්, ඊමේල් එක verify කරලා නැත්නම් ලොග් වෙන්න දෙන්නෑ!
       if (data?.user && !data.user.email_confirmed_at) {
         setAuthMessage({ 
           type: "error", 
-          text: "Your email is not verified yet. Please check your inbox and confirm your email first." 
+          text: "Your account is not verified yet. Please check your inbox and confirm your email first." 
         });
-        await supabase.auth.signOut(); // සෙෂන් එක ක්ලියර් කරනවා
+        await supabase.auth.signOut();
         setUser(null);
       }
     }
@@ -109,7 +106,6 @@ export default function EmployeePage() {
   };
 
   const toggleTask = async (id: string, currentStatus: boolean) => {
-const toggleTask = async (id: string, currentStatus: boolean) => {
     const { error } = await supabase
       .from("tasks")
       .update({ completed: !currentStatus })
@@ -121,30 +117,32 @@ const toggleTask = async (id: string, currentStatus: boolean) => {
   };
 
   if (loading) {
-    return <div className="min-h-screen bg-[#f4f7f4] flex items-center justify-center text-slate-900 font-bold">Connecting to UpNited Workspace...</div>;
-  }
-  if (loading) {
-    return <div className="min-h-screen bg-[#f4f7f4] flex items-center justify-center text-slate-900 font-bold">Verifying Session...</div>;
+    return (
+      <div className="min-h-screen bg-[#f4f7f4] flex items-center justify-center text-slate-900 font-bold">
+        Connecting to UpNited Workspace...
+      </div>
+    );
   }
 
   return (
     <section className="bg-[#f4f7f4] min-h-screen py-24 px-4 text-slate-900 flex justify-center items-center">
       <div className="max-w-md w-full bg-white rounded-[2.5rem] border border-slate-200/80 p-8 sm:p-10 shadow-xl relative overflow-hidden">
+        
+        {/* Top Header line */}
         <div className="absolute top-0 left-0 h-[5px] w-full bg-gradient-to-r from-[#a3cc00] to-black" />
 
         {!user ? (
           <div>
-            <div className="text-center mb-6">
+            <div className="text-center mb-8">
               <div className="w-14 h-14 bg-slate-900 text-white font-black text-2xl flex items-center justify-center rounded-2xl mx-auto shadow-md">
                 U
               </div>
               <h2 className="text-2xl font-extrabold text-slate-950 mt-4 tracking-tight">
-                {isSignUp ? "Create Secured Account" : "UpNited Workspace"}
+                {isSignUp ? "Create Workspace Account" : "UpNited Workspace"}
               </h2>
-              <p className="text-xs text-slate-500 mt-1">Verified personnel access portal only</p>
+              <p className="text-xs text-slate-500 mt-1">Verified employee access portal only</p>
             </div>
 
-            {/* Notification Messages (Success / Error Alert) */}
             {authMessage && (
               <div className={`p-4 rounded-xl mb-6 text-xs font-semibold flex items-start gap-2.5 leading-relaxed ${
                 authMessage.type === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : "bg-red-50 text-red-600 border border-red-100"
@@ -156,7 +154,7 @@ const toggleTask = async (id: string, currentStatus: boolean) => {
 
             <form onSubmit={handleAuth} className="flex flex-col gap-4">
               <div>
-                <label className="text-xs font-bold text-slate-600 block mb-1">Work Email</label>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Company Email</label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input
@@ -190,7 +188,7 @@ const toggleTask = async (id: string, currentStatus: boolean) => {
                 className="w-full bg-[#1e4e5e] hover:bg-[#153743] text-white rounded-xl py-3.5 text-sm font-bold flex items-center justify-center gap-2 mt-2 transition-all active:scale-95 shadow-md"
               >
                 {isSignUp ? <UserPlus size={16} /> : <Key size={16} />}
-                {isSignUp ? "Register & Verify" : "Sign In →]"}
+                {isSignUp ? "Register Account" : "Secure Sign In"}
               </button>
             </form>
 
@@ -199,7 +197,7 @@ const toggleTask = async (id: string, currentStatus: boolean) => {
                 onClick={() => { setIsSignUp(!isSignUp); setAuthMessage(null); }}
                 className="text-xs font-bold text-[#a3cc00] hover:underline"
               >
-                {isSignUp ? "Already registered? Sign In" : "New Employee? Register Here"}
+                {isSignUp ? "Already a team member? Sign In" : "New Employee? Register Here"}
               </button>
             </div>
           </div>
@@ -232,14 +230,17 @@ const toggleTask = async (id: string, currentStatus: boolean) => {
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
               />
-              <button type="submit" className="bg-black text-white p-3 rounded-xl hover:bg-slate-900 transition-all">
+              <button
+                type="submit"
+                className="bg-black text-white p-3 rounded-xl hover:bg-slate-900 transition-all active:scale-95"
+              >
                 <Plus size={18} />
               </button>
             </form>
 
             <div className="flex flex-col gap-2 max-h-[280px] overflow-y-auto pr-1">
               {tasks.length === 0 ? (
-                <p className="text-center text-xs text-slate-400 py-6">All clear! No tasks active right now. 🙌</p>
+                <p className="text-center text-xs text-slate-400 py-6">All operational tasks are clear for now! 🙌</p>
               ) : (
                 tasks.map((task) => (
                   <div
@@ -249,7 +250,11 @@ const toggleTask = async (id: string, currentStatus: boolean) => {
                       task.completed ? "bg-slate-50 opacity-60 line-through text-slate-400" : "bg-white hover:border-[#a3cc00]/50"
                     }`}
                   >
-                    {task.completed ? <CheckCircle2 size={18} className="text-[#a3cc00]" /> : <Circle size={18} className="text-slate-300" />}
+                    {task.completed ? (
+                      <CheckCircle2 size={18} className="text-[#a3cc00] shrink-0" />
+                    ) : (
+                      <Circle size={18} className="text-slate-300 shrink-0" />
+                    )}
                     <span className="text-xs font-medium">{task.title}</span>
                   </div>
                 ))
