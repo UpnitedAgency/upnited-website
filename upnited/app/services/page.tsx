@@ -4,11 +4,12 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { CheckCircle2, MessageSquarePlus } from "lucide-react";
 
+// මෙතනට මම සර්විස් 6ටම ගැලපෙන Transparent 3D Images Direct ලින්ක් කරලා තියෙන්නේ මචං
 const servicesData = [
   {
     title: "Social Media Management",
     desc: "We plan, create, and manage your social media presence to drive engagement and brand loyalty.",
-    image: "/services/social-3d.png", 
+    image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3", // Social Media 3D Icon Vibe
     features: [
       "Content calendars and scheduling",
       "Community management",
@@ -19,7 +20,7 @@ const servicesData = [
   {
     title: "Branding and Graphic Design",
     desc: "Crafting memorable brand identities, logos, and visual assets that set your business apart from the competition.",
-    image: "/services/branding-3d.png",
+    image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3", // Abstract 3D Shapes & Palettes
     features: [
       "Logo and Brand Identity",
       "Marketing Collateral",
@@ -30,7 +31,7 @@ const servicesData = [
   {
     title: "Website Design and Development",
     desc: "Fast, responsive, and conversion-focused websites tailored specifically for your business goals.",
-    image: "/services/web-3d.png",
+    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3", // 3D Web UI / React Element
     features: [
       "Custom UI/UX Design",
       "Next.js and React Development",
@@ -41,7 +42,7 @@ const servicesData = [
   {
     title: "Meta and Google Ads",
     desc: "High-performing paid ad campaigns that target the right audience to deliver maximum return on investment (ROI).",
-    image: "/services/ads-3d.png",
+    image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3", // 3D Arrow Chart / Growth
     features: [
       "Campaign Setup and Strategy",
       "Audience Targeting",
@@ -52,7 +53,7 @@ const servicesData = [
   {
     title: "Video Production",
     desc: "High-quality, scroll-stopping video content designed for modern social media platforms and branding.",
-    image: "/services/video-3d.png",
+    image: "https://images.unsplash.com/photo-1620121692029-d088224ddc74?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3", // Cinematic Studio Element
     features: [
       "Scriptwriting and Storyboarding",
       "Professional Shooting",
@@ -63,7 +64,7 @@ const servicesData = [
   {
     title: "Drone Photography and Videography",
     desc: "Stunning, cinematic aerial views and footage to elevate your commercial projects and brand storytelling.",
-    image: "/services/drone-3d.png",
+    image: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3", // Drone Tech Concept
     features: [
       "4K Cinematic Aerial Footage",
       "Commercial Property Shoots",
@@ -107,17 +108,19 @@ export default function ServicesPage() {
               {/* Neon accent on top */}
               <div className="absolute top-0 left-0 h-[4px] w-16 bg-[#ccff00]" />
 
-              {/* Left Side: 3D Image Line Box */}
-              <div className="lg:col-span-4 flex justify-center items-center bg-slate-50 border border-slate-100 rounded-3xl p-6 aspect-square max-w-[260px] w-full mx-auto lg:mx-0 shadow-inner group">
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  onError={(e) => {
-                    // පින්තූරය public එකේ නැත්නම් broken image icon එකක් වෙනුවට transparent Placeholder එකක් පෙන්නනවා
-                    e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23a3cc00' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'><rect width='18' height='18' x='3' y='3' rx='2' ry='2'/><circle cx='9' cy='9' r='2'/><path d='m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21'/></svg>";
-                  }}
-                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
-                />
+              {/* Left Side: Direct 3D Image Box with Floating Animation */}
+              <div className="lg:col-span-4 flex justify-center items-center bg-slate-50 border border-slate-100 rounded-3xl p-4 aspect-square max-w-[260px] w-full mx-auto lg:mx-0 shadow-inner group overflow-hidden">
+                <motion.div 
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                  className="w-full h-full relative flex justify-center items-center"
+                >
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover rounded-2xl mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+                  />
+                </motion.div>
               </div>
 
               {/* Right Side: Content Box */}
