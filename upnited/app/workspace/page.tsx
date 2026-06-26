@@ -109,6 +109,7 @@ export default function EmployeePage() {
   };
 
   const toggleTask = async (id: string, currentStatus: boolean) => {
+const toggleTask = async (id: string, currentStatus: boolean) => {
     const { error } = await supabase
       .from("tasks")
       .update({ completed: !currentStatus })
@@ -119,6 +120,9 @@ export default function EmployeePage() {
     }
   };
 
+  if (loading) {
+    return <div className="min-h-screen bg-[#f4f7f4] flex items-center justify-center text-slate-900 font-bold">Connecting to UpNited Workspace...</div>;
+  }
   if (loading) {
     return <div className="min-h-screen bg-[#f4f7f4] flex items-center justify-center text-slate-900 font-bold">Verifying Session...</div>;
   }
