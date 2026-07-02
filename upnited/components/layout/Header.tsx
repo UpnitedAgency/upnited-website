@@ -1,106 +1,92 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
-import { Menu, X, ArrowRight } from "lucide-react";
-
-const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "Services", href: "/services" },
-  { name: "Portfolio", href: "/portfolio" },
-  { name: "Pricing", href: "/pricing" },
-  { name: "About", href: "/about" },
-];
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const navItems = [
+    { name: "Home", href: "/" },
+    { name: "Services", href: "/services" },
+    { name: "Portfolio", href: "/portfolio" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Talent Hub", href: "/talent-hub" },
+    { name: "About", href: "/about" },
+    { name: "Contact", href: "/contact" },
+  ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#f4f7f4]/80 backdrop-blur-md border-b border-slate-200/50 text-slate-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          
-          {/* Logo Section */}
-          <div className="flex-shrink-0">
-            <Link href="/" className="font-display text-2xl font-black tracking-tight text-slate-950">
-              UpNited<span className="text-[#a3cc00]">.</span>
-            </Link>
+    <header className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-slate-100 z-50 px-6 py-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        
+        {/* LOGO AREA */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-10 h-10 bg-[#1e4e5e] text-[#ccff00] font-black text-xl flex items-center justify-center rounded-xl shadow-sm group-hover:scale-105 transition-transform">
+            U
           </div>
+          <span className="text-xl font-black text-[#1e4e5e] tracking-tight">
+            UpNited
+          </span>
+        </Link>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-sm font-semibold text-slate-600 hover:text-slate-950 transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Desktop CTA Button */}
-          <div className="hidden md:flex items-center gap-4">
-            <Link 
-              href="/workspace/login" 
-              className="text-sm font-semibold text-slate-600 hover:text-slate-950 px-4 py-2"
-            >
-              Client Portal
-            </Link>
+        {/* APPLE-STYLE LIQUID NAVIGATION */}
+        <nav className="hidden md:flex items-center gap-1 bg-slate-100/60 p-1.5 rounded-full relative">
+          {navItems.map((item, index) => (
             <Link
-              href="/contact"
-              className="inline-flex items-center gap-1.5 rounded-full bg-black hover:bg-slate-900 text-white px-5 py-2.5 text-xs font-bold transition-all shadow-sm active:scale-95"
+              key={item.name}
+              href={item.href}
+              className="relative px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors duration-300 rounded-full"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
-              <span>Get Started</span>
-              <ArrowRight size={14} className="text-[#ccff00]" />
-            </Link>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-xl text-slate-700 hover:bg-slate-100 focus:outline-none"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-
-        </div>
-      </div>
-
-      {/* Mobile Menu Overlay */}
-      {isOpen && (
-        <div className="md:hidden bg-white border-b border-slate-200 px-4 pt-4 pb-6 space-y-3 shadow-lg absolute w-full left-0 animate-in fade-in slide-in-from-top-5 duration-200">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => setIsOpen(false)}
-              className="block rounded-xl px-4 py-3 text-base font-bold text-slate-800 hover:bg-[#f4f7f4] hover:text-slate-950 transition-all"
-            >
-              {link.name}
+              {/* Liquid Hover Backing */}
+              {hoveredIndex === index && (
+                <motion.span
+                  layoutId="header-liquid"
+                  className="absolute inset-0 bg-[#ccff00] rounded-full -z-10"
+                  transition={{
+                    type: "spring",
+                    stiffness: 380,
+                    damping: 30,
+                  }}
+                />
+              )}
+              <span className="relative z-10">{item.name}</span>
             </Link>
           ))}
-          <div className="pt-4 border-t border-slate-100 flex flex-col gap-3">
-            <Link
-              href="/workspace/login"
-              onClick={() => setIsOpen(false)}
-              className="block text-center rounded-xl px-4 py-3 text-base font-bold text-slate-600 hover:bg-slate-50"
+        </nav>
+
+        {/* CUSTOM THEME GET STARTED BUTTON */}
+        <div className="flex items-center gap-4">
+          <Link href="/workspace">
+            <motion.button
+              whileHover={{ scale: 1.03, boxShadow: "0px 10px 25px rgba(30, 78, 94, 0.15)" }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-[#1e4e5e] text-white hover:bg-[#153743] px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 transition-colors border border-transparent hover:border-[#ccff00]/30"
             >
-              Client Portal
-            </Link>
-            <Link
-              href="/contact"
-              onClick={() => setIsOpen(false)}
-              className="block text-center rounded-xl bg-black text-white px-4 py-3.5 text-sm font-bold shadow-md"
-            >
-              Get Started
-            </Link>
-          </div>
+              <span>Get Started</span>
+              {/* Pure SVG Arrow Icon (No lucide-react dependency!) */}
+              <svg 
+                width="14" 
+                height="14" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="3" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className="text-[#ccff00]"
+              >
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </motion.button>
+          </Link>
         </div>
-      )}
+
+      </div>
     </header>
   );
 }
