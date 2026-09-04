@@ -1,0 +1,34 @@
+export const siteConfig = {
+  name: "UpNited Marketing",
+  shortName: "UpNited",
+  tagline: "Turning Ideas Into Impact",
+  description: "UpNited is a creative growth partner helping brands scale through strategy, branding, social media marketing, content creation, and digital advertising.",
+  url: "https://upnited.com",
+  whatsappNumber: "94721831353",
+  email: "upnited.marketing@gmail.com",
+  phone: "+94 72 183 1353",
+  location: "Colombo, Sri Lanka",
+  social: {
+    facebook: "https://facebook.com/upnited",
+    instagram: "https://instagram.com/upnited",
+    linkedin: "https://linkedin.com/company/upnited",
+    youtube: "https://youtube.com/@upnited",
+    tiktok: "https://tiktok.com/@upnited",
+  },
+};
+
+export const mainNav = [
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Talent Hub", href: "/talent-hub" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
+
+export const RESERVED_USERNAMES = [
+  "admin","login","signup","dashboard","settings","talent","join",
+  "submit","api","workspace","home","about","contact","services",
+  "portfolio","pricing","upnited",
+];
